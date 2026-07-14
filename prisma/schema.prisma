@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//Enums
+// Enums
 
 enum Role {
   ADMIN
@@ -73,9 +73,14 @@ model User {
   role      Role     @default(TEAM_MEMBER)
   isDeleted Boolean  @default(false)
 
+  isEmailVerified   Boolean   @default(false)
+  passwordChangedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  otps            Otp[]
+  sessions        Session[]
   ownedProjects   Project[]       @relation("ProjectCreator")
   memberships     ProjectMember[]
   createdTasks    Task[]          @relation("TaskCreator")
@@ -87,6 +92,37 @@ model User {
   sentInvitations Invitation[]
 
   @@index([email])
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email     String
+  otp       String
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String   @unique
+  ipAddress    String?
+  userAgent    String?
+
+  isRevoked     Boolean   @default(false)
+  revokedAt     DateTime?
+  revokedReason String?
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRevoked])
 }
 
 model Project {
@@ -234,3 +270,5 @@ model ActivityLog {
 
   @@index([projectId, createdAt])
 }
+
+

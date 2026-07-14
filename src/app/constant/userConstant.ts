@@ -1,1 +1,5 @@
-export const USER_ROLE = {} as const;
+export const USER_ROLE = {
+  ADMIN: 'ADMIN',
+  PROJECT_MANAGER: 'PROJECT_MANAGER',
+  TEAM_MEMBER: 'TEAM_MEMBER',
+} as const;

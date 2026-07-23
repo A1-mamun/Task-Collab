@@ -38,6 +38,7 @@ const Auth = (...requiredRole: TUserRole[]) => {
         throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
       }
     }
+
     // destructure the decoded token
     const { userId, role, iat } = decoded;
 
@@ -55,11 +56,11 @@ const Auth = (...requiredRole: TUserRole[]) => {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
     }
 
-    const userStatus = user?.status;
+    // const userStatus = user?.status;
 
-    if (userStatus === 'BLOCKED') {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked !');
-    }
+    // if (userStatus === 'BLOCKED') {
+    //   throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked !');
+    // }
 
     if (
       user.passwordChangedAt &&

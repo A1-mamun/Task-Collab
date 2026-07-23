@@ -3,6 +3,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import Auth from '../../middlewares/auth';
 import { AuthValidation } from './auth.validation';
 import { AuthController } from './auth.controller';
+import { USER_ROLE } from '../../constant/userConstant';
 
 const router = Router();
 
@@ -50,7 +51,7 @@ router.post('/logout', Auth(), AuthController.logout);
 
 router.post(
   '/change-password',
-  Auth(),
+  Auth(USER_ROLE.ADMIN, USER_ROLE.PROJECT_MANAGER, USER_ROLE.TEAM_MEMBER),
   validateRequest(AuthValidation.ChangePasswordSchema),
   AuthController.changePassword,
 );
